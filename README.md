@@ -382,7 +382,8 @@ The I/O-bound container completed approximately 5.3x faster than the CPU-bound o
 
 All binaries (`engine`, `memory_hog`, `cpu_hog`, `io_pulse`) and `monitor.ko` built successfully. Minor warnings about unused functions from the boilerplate skeleton are expected and harmless.
 
-![Build output](screenshots/step1.png)
+
+<img width="1358" height="931" alt="1" src="https://github.com/user-attachments/assets/5705ddb6-7214-4584-864b-d19674fe00e5" />
 
 ---
 
@@ -390,7 +391,8 @@ All binaries (`engine`, `memory_hog`, `cpu_hog`, `io_pulse`) and `monitor.ko` bu
 
 `rootfs-alpha` prepared with `cpu_hog` and `memory_hog` copied to the root. Alpine filesystem structure (`bin`, `etc`, `lib`, `proc`, etc.) visible alongside the workload binaries.
 
-![Rootfs setup](screenshots/step2.png)
+
+<img width="969" height="134" alt="2" src="https://github.com/user-attachments/assets/90273c8c-0bd9-4615-8177-322e030b5835" />
 
 ---
 
@@ -398,7 +400,8 @@ All binaries (`engine`, `memory_hog`, `cpu_hog`, `io_pulse`) and `monitor.ko` bu
 
 `sudo insmod monitor.ko` succeeds. `/dev/container_monitor` device created. `dmesg` confirms `[container_monitor] Module loaded. Device: /dev/container_monitor`.
 
-![Module loaded](screenshots/step3.png)
+
+<img width="994" height="202" alt="3" src="https://github.com/user-attachments/assets/6e116cad-8bac-4b0c-ad1a-948a13d1c201" />
 
 ---
 
@@ -406,7 +409,8 @@ All binaries (`engine`, `memory_hog`, `cpu_hog`, `io_pulse`) and `monitor.ko` bu
 
 `sudo ./engine supervisor ./rootfs-base` starts the long-running supervisor. Output confirms `[supervisor] ready. rootfs=./rootfs-base`.
 
-![Supervisor started](screenshots/step4.png)
+
+<img width="1305" height="75" alt="4" src="https://github.com/user-attachments/assets/3dcb9aae-900e-45aa-8286-56bf41a51065" />
 
 ---
 
@@ -414,7 +418,8 @@ All binaries (`engine`, `memory_hog`, `cpu_hog`, `io_pulse`) and `monitor.ko` bu
 
 Two containers (`alpha` and `beta`) launched simultaneously with `cpu_hog 10`. `sudo ./engine ps` shows both tracked with PID, start time, soft/hard limits (40 MiB / 64 MiB), and state.
 
-![Multi-container ps](screenshots/step5.png)
+
+<img width="969" height="215" alt="5" src="https://github.com/user-attachments/assets/6353c106-93fb-457b-917a-4e7435db4a46" />
 
 ---
 
@@ -422,7 +427,8 @@ Two containers (`alpha` and `beta`) launched simultaneously with `cpu_hog 10`. `
 
 `sudo ./engine logs alpha` returns 60 seconds of `cpu_hog` output captured through the logging pipeline — demonstrating the pipe → bounded buffer → log file path working end to end. `ps` output at the bottom confirms both containers have exited cleanly.
 
-![Logs and CLI](screenshots/step6.png)
+
+<img width="560" height="976" alt="6" src="https://github.com/user-attachments/assets/8ac4f16d-8a40-4535-bdb7-fb23ff8054f9" />
 
 ---
 
@@ -430,7 +436,7 @@ Two containers (`alpha` and `beta`) launched simultaneously with `cpu_hog 10`. `
 
 `memory_hog` started with `--soft-mib 1 --hard-mib 64`. `dmesg` shows the sequence: `SOFT LIMIT` warning fired first at ~32MB RSS (past the 1MB threshold), then `HARD LIMIT` kill fired at ~95MB RSS. `Unregister request` confirms the supervisor was notified and cleaned up the kernel entry.
 
-![Soft and hard limit](screenshots/step7.png)
+<img width="1367" height="409" alt="7" src="https://github.com/user-attachments/assets/634887f6-c47c-4ba2-a02f-9d31d491dad7" />
 
 ---
 
@@ -438,7 +444,8 @@ Two containers (`alpha` and `beta`) launched simultaneously with `cpu_hog 10`. `
 
 `ps` output shows `alpha` in state `hard_limit_killed` after being killed by the kernel module — confirming that the supervisor correctly classified the SIGKILL-with-no-stop-requested path as a hard limit kill rather than a graceful stop.
 
-![Hard limit killed state](screenshots/step8.png)
+<img width="1366" height="546" alt="8" src="https://github.com/user-attachments/assets/d71d9af3-5c0d-4b0c-bb78-8a65f8a91545" />
+
 
 ---
 
@@ -446,7 +453,8 @@ Two containers (`alpha` and `beta`) launched simultaneously with `cpu_hog 10`. `
 
 Both experiments run via `run_experiments.sh`. Experiment 1 shows nice -5 vs nice +10 CPU-bound containers. Experiment 2 shows CPU-bound vs I/O-bound. Results printed with completion times confirming CFS scheduling behaviour.
 
-![Scheduling experiments](screenshots/step9.png)
+<img width="1375" height="898" alt="9" src="https://github.com/user-attachments/assets/07ae3ae3-5718-41b7-9d28-d7ecd108b759" />
+
 
 ---
 
@@ -454,7 +462,8 @@ Both experiments run via `run_experiments.sh`. Experiment 1 shows nice -5 vs nic
 
 `ps aux | grep Z | grep -v grep` returns no zombie processes. `sudo rmmod monitor` succeeds. `dmesg | tail -n 5` shows `[container_monitor] Module unloaded.` `ls logs/` shows all per-container log files (`alpha.log`, `beta.log`, `exp1a.log`, `exp1b.log`, `exp2a.log`, `exp2b.log`) intact after shutdown.
 
-![Clean teardown](screenshots/step10.png)
+<img width="1261" height="329" alt="10" src="https://github.com/user-attachments/assets/bb0b0072-de1f-4443-a8ff-e07aaa291e87" />
+
 
 ---
 
